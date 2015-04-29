@@ -1,0 +1,25 @@
+{
+  "name": "keykit",
+  "version": "1.0.0",
+  "description": "KeyEvents and KeyStrokes general utilities",
+  "main": "lib/keykit.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/romgrk/keykit"
+  },
+  "keywords": [
+    "key",
+    "event",
+    "keystroke",
+    "keyevent"
+  ],
+  "author": "romgrk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/romgrk/keykit/issues"
+  },
+  "homepage": "https://github.com/romgrk/keykit"
+}
