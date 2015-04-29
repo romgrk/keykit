@@ -1,6 +1,6 @@
 
 # KeyKit module
 
-Install:
+Some basic shit to handle KeyEvent, transform KeyCodes into chars and stuff like that.
 
-> npm install keykit
+**Install :** ` npm install keykit `

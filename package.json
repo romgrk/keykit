@@ -14,7 +14,9 @@
     "key",
     "event",
     "keystroke",
-    "keyevent"
+    "keyevent",
+    "keycode",
+    "dispatch"
   ],
   "author": "romgrk",
   "license": "ISC",
