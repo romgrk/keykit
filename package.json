@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/romgrk/keykit/issues"
   },
-  "homepage": "https://github.com/romgrk/keykit"
+  "homepage": "https://github.com/romgrk/keykit",
+  "dependencies": {
+    "underscore-plus": "^1.6.6"
+  }
 }

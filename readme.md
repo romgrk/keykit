@@ -1,4 +1,6 @@
 
 # KeyKit module
 
-init
+Install:
+
+> npm install keykit
