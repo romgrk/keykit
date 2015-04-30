@@ -1,6 +1,7 @@
 
 _ = require 'underscore-plus'
 
+KeyKit = require './keykit'
 
 module.exports = class KeyExecuter
     keys:     null

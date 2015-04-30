@@ -1,5 +1,8 @@
 
+_ = require 'underscore-plus'
+
 KeyKit = require './keykit'
+{Key, KeyCode} = require './key-code'
 
 module.exports = class KeyStroke
 
@@ -8,16 +11,25 @@ module.exports = class KeyStroke
         @alt        = options.alt ? false
         @shift      = options.shift ? false
         @meta       = options.meta ? false
-        @code       = options.code ? options.keyCode ? null
-        @identifier = options.identifier ? null
+
+        @code       = options.code ? options.keyCode ? options.keycode ? null
+
         @name       = options.name ? null
-        @char       = options.char ? KeyKit.getChar @
+        # @char       = options.char ? KeyKit.getChar @
+
+        @identifier = options.identifier ? null
 
         @complete()
 
     complete: ->
+        if @code?
+            kc = KeyCode[@code]
+            @name = kc.name
+            if kc.shiftable
+                @char = kc.char[@shift]
+            else
+                @char = kc.char
         @name ?= KeyKit.keynameByCode[@code]
-        @code ?= KeyCode[@name]
         @char ?= KeyKit.getChar @
 
     toString: ->
@@ -36,9 +48,9 @@ module.exports = class KeyStroke
             return s
 
     vimEscaped: ->
-        visible = not KeyCode.isNotVisible(@code)
-        if KeyCode.isMod(@code)
-            # @name
+        kc = KeyCode[@code]
+        visible = kc.visible
+        if _.contains [16, 17, 18], @code
             return ''
         else if !(@ctrl || @alt) && visible
             unless @char is '<' then @char else '<LT>'

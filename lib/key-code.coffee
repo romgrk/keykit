@@ -1,5 +1,5 @@
 
-KeyCode:
+KeyCode=
     3:
         name: null
         sysname: "CANCEL"
@@ -1144,13 +1144,7 @@ KeyCode:
         visible: false
         char: null
 
-Key:
-    CANCEL:
-        name: null
-        code: 3
-        printable: false
-        visible: false
-        char: null
+Key=
     HELP:
         name: null
         code: 6
