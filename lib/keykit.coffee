@@ -2,75 +2,9 @@ console.debug = console.log
 
 _ = require 'underscore-plus'
 
-KeyStroke   = require './key-stroke'
-KeyExecuter = require './key-executer'
-
-KeyCode =
-
-    codes:
-        # UPPERCASE names
-        "BACKSPACE": 8,  "TAB": 9,  "ENTER": 13,  "RETURN": 14,  "SHIFT": 16,
-        "CONTROL": 17,  "ALT": 18,  "ESCAPE": 27,  "SPACE": 32,  "PAGEUP": 33,
-        "PAGEDOWN": 34,  "END": 35,  "HOME": 36,  "LEFT": 37,  "UP": 38,  "RIGHT": 39,
-        "DOWN": 40,  "INSERT": 45,  "DELETE": 46,
-        "F5": 116,  "F6": 117,  "F7": 118,  "F8": 119,  "F9": 120,  "F10": 121,
-        "F11": 122,  "F12": 123,  "F13": 124,  "F14": 125,  "F15": 126,  "F16": 127,
-        "F17": 128,  "F18": 129,  "F19": 130,  "F20": 131,  "F21": 132,  "F22": 133,
-        "F23": 134,  "F24": 135,  "META": 224,
-        "ALTGR": 225, "CONTEXT_MENU": 93,
-        # names
-        "backspace": 8,  "tab": 9,  "enter": 13,  "return": 14,  "shift": 16,
-        "control": 17,  "alt": 18,  "escape": 27,  "space": 32,  "pageup": 33,
-        "pagedown": 34,  "end": 35,  "home": 36,  "left": 37,  "up": 38,  "right": 39,
-        "down": 40,  "insert": 45,  "delete": 46,
-        "0": 48,  "1": 49,  "2": 50,  "3": 51,  "4": 52,  "5": 53,  "6": 54,
-        "7": 55,  "8": 56,  "9": 57,
-        "A": 65,  "B": 66,  "C": 67,  "D": 68,  "E": 69,  "F": 70,  "G": 71,
-        "H": 72,  "I": 73,  "J": 74,  "K": 75,  "L": 76,  "M": 77,  "N": 78,  "O": 79,
-        "P": 80,  "Q": 81,  "R": 82,  "S": 83,  "T": 84,  "U": 85,  "V": 86,  "W": 87,
-        "X": 88,  "Y": 89,  "Z": 90
-        "a": 65,  "b": 66,  "c": 67,  "d": 68,  "e": 69,  "f": 70,  "g": 71,
-        "h": 72,  "i": 73,  "j": 74,  "k": 75,  "l": 76,  "m": 77,  "n": 78,  "o": 79,
-        "p": 80,  "q": 81,  "r": 82,  "s": 83,  "t": 84,  "u": 85,  "v": 86,  "w": 87,
-        "x": 88,  "y": 89,  "z": 90,  "f1": 112,  "f2": 113,  "f3": 114,  "f4": 115,
-        "f5": 116,  "f6": 117,  "f7": 118,  "f8": 119,  "f9": 120,  "f10": 121,
-        "f11": 122,  "f12": 123,  "f13": 124,  "f14": 125,  "f15": 126,  "f16": 127,
-        "f17": 128,  "f18": 129,  "f19": 130,  "f20": 131,  "f21": 132,  "f22": 133,
-        "f23": 134,  "f24": 135,  ";": 186,  "=": 187,  ",": 188,  "-": 189,  ".": 190,
-        "/": 191,  "`": 192,  "[": 219,  "\\": 220,  "]": 221,  "'": 222,  "meta": 224,
-        "altgr": 225
-
-        nonPrintableCodes: [
-            16, 17, 18, 224, 225, 8, 27,
-            33, 34, 35, 36,
-            37, 38, 39, 40,
-            45, 46,
-            112, 113, 114, 115, 116, 117,
-            118, 119, 120, 121, 122, 123,
-            124, 125, 126, 127, 128, 129,
-            130, 131, 132, 133, 134, 135 ]
-
-    isMod: (code) ->
-        _.contains [16, 17, 18, 224, 225], code
-
-    isNotPrintable: (code) ->
-        _.contains [ 16, 17, 18, 224, 225,
-            8, 27, 33, 34, 35, 36,
-            37, 38, 39, 40, 45, 46,
-            112, 113, 114, 115, 116, 117,
-            118, 119, 120, 121, 122, 123,
-            124, 125, 126, 127, 128, 129,
-            130, 131, 132, 133, 134, 135 ], code
-
-    isNotVisible: (code) ->
-        @isNotPrintable(code) or _.contains [9, 13, 32], code
-
-    getName: (code) ->
-        for name, keycode of codes
-            return name if code is keycode
-        return null
-
-_.extend KeyCode, KeyCode.codes
+KeyStroke      = require './key-stroke'
+KeyExecuter    = require './key-executer'
+{Key, KeyCode} = require './key-code'
 
 KeyKit =
 
