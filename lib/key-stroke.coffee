@@ -53,7 +53,7 @@ module.exports = class KeyStroke
         if _.contains [16, 17, 18], @code
             return ''
         else if !(@ctrl || @alt) && visible
-            unless @char is '<' then @char else '<LT>'
+            unless @char is '<' then @char[@shift] else '<LT>'
         else
             s = ""
             s += (if @ctrl then "C-" else "")
