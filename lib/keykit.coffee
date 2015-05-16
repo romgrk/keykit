@@ -334,7 +334,7 @@ KeyKit =
 
 
     fromKBEvent: (event) ->
-        if event.type == 'keydown'
+        if event.type == 'keydown' || event.type == 'keyup'
             return new KeyStroke
                 code: event.keyCode || event.which
                 ctrl: event.ctrlKey || false
@@ -349,6 +349,7 @@ KeyKit =
             ks.alt = event.altKey
             ks.meta = event.metaKey
             return ks
+        return null
 
     isVimEscaped: (k) ->
         return @vimEscapedRegex.test k

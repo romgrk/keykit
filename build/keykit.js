@@ -685,7 +685,7 @@
     },
     fromKBEvent: function(event) {
       var ks;
-      if (event.type === 'keydown') {
+      if (event.type === 'keydown' || event.type === 'keyup') {
         return new KeyStroke({
           code: event.keyCode || event.which,
           ctrl: event.ctrlKey || false,
@@ -703,6 +703,7 @@
         ks.meta = event.metaKey;
         return ks;
       }
+      return null;
     },
     isVimEscaped: function(k) {
       return this.vimEscapedRegex.test(k);
