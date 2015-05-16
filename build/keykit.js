@@ -460,7 +460,7 @@
       shift: "SHIFT",
       altgr: "ALTGR"
     },
-    normalKeyStrokeRegex: /^(control|alt|shift)|(?:(ctrl-)?(alt-)?(shift-)?(.|enter|space|backspace|delete|tab|escape|pageup|pagedown|home|end|left|right|up|down|f\d{1,2}))$/,
+    normalKeyStrokeRegex: /^(?:(?:(?:(?:ctrl|alt|shift|meta|cmd)-)*(.|enter|space|backspace|delete|tab|escape|pageup|pagedown|home|end|left|right|up|down|f\d{1,2}))|(control|ctrl|alt|shift|meta|cmd))$/,
     vimEscapedRegex: /<((?:((?:[CSAM]-)+)?(BS|TAB|CR|ESC|SPACE|PAGEUP|PAGEDOWN|END|HOME|LEFT|UP|RIGHT|DOWN|DEL|BAR|F\d{1,2}|<LT>|.))|LT)>/i,
     vimSequenceRegex: /([^<]|<((?:((?:[CSAM]-)+)?(BS|TAB|CR|ESC|SPACE|PAGEUP|PAGEDOWN|END|HOME|LEFT|UP|RIGHT|DOWN|DEL|BAR|F\d{1,2}|<LT>|.))|LT)>)/gi,
 
@@ -632,36 +632,81 @@
       });
     },
     fromKeyStroke: function(keystroke) {
-      var alt, code, ctrl, key, match, mod, name, shift, _ref1;
+      var alt, code, ctrl, key, match, meta, mod, name, shift, _ref1;
       if (keystroke.length === 1) {
         return this.fromChar(keystroke);
       }
-      _ref1 = keystroke.match(this.normalKeyStrokeRegex), match = _ref1[0], mod = _ref1[1], ctrl = _ref1[2], alt = _ref1[3], shift = _ref1[4], key = _ref1[5];
-      ctrl = ctrl != null;
-      alt = alt != null;
-      shift = shift != null;
-      if (key.length === 1) {
-        name = KeyKit.unshift(key);
+      _ref1 = keystroke.match(this.normalKeyStrokeRegex), match = _ref1[0], key = _ref1[1], mod = _ref1[2];
+      console.log(keystroke.match(this.normalKeyStrokeRegex));
+      if (mod != null) {
+        if (mod === 'cmd') {
+          mod = 'meta';
+        }
+        if (mod === 'trl') {
+          mod = 'control';
+        }
+        code = Key.code(mod);
+        switch (mod) {
+          case 'control':
+            ctrl = true;
+            break;
+          case 'alt':
+            alt = true;
+            break;
+          case 'shift':
+            shift = true;
+            break;
+          case 'meta':
+            meta = true;
+        }
+        return new KeyStroke({
+          ctrl: ctrl != null ? ctrl : false,
+          alt: alt != null ? alt : false,
+          shift: shift != null ? shift : false,
+          meta: meta != null ? meta : false,
+          code: code
+        });
       } else {
-        name = key;
+        ctrl = keystroke.match(/ctrl-/) != null;
+        alt = keystroke.match(/alt-/) != null;
+        shift = keystroke.match(/shift-/) != null;
+        meta = keystroke.match(/meta-/) != null;
+        meta |= keystroke.match(/cmd-/) != null;
+        if (key.length === 1) {
+          name = KeyKit.unshift(key);
+        } else {
+          name = key;
+        }
+        return new KeyStroke({
+          ctrl: ctrl,
+          alt: alt,
+          shift: shift,
+          meta: meta,
+          name: name
+        });
       }
-      code = Key.code(name);
-      return new KeyStroke({
-        ctrl: ctrl,
-        alt: alt,
-        shift: shift,
-        name: name
-      });
     },
     fromKBEvent: function(event) {
-      return new KeyStroke({
-        code: event.keyCode || event.which,
-        ctrl: event.ctrlKey || false,
-        alt: event.altKey || false,
-        shift: event.shiftKey || false,
-        name: this.keynameByCode[event.keyCode || event.which],
-        identifier: event.keyIdentifier || null
-      });
+      var ks;
+      if (event.type === 'keydown') {
+        new KeyStroke({
+          code: event.keyCode || event.which,
+          ctrl: event.ctrlKey || false,
+          alt: event.altKey || false,
+          shift: event.shiftKey || false,
+          meta: event.metaKey || false,
+          name: this.keynameByCode[event.keyCode || event.which],
+          identifier: event.keyIdentifier || null
+        });
+      }
+      if (event.type === 'keypress') {
+        ks = this.fromChar(String.fromCharCode(event.charCode));
+        ks.ctrl = event.ctrlKey;
+        ks.alt = event.altKey;
+        ks.shift = event.shiftKey;
+        ks.meta = event.metaKey;
+        return ks;
+      }
     },
     isVimEscaped: function(k) {
       return this.vimEscapedRegex.test(k);

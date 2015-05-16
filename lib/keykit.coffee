@@ -130,19 +130,16 @@ KeyKit =
         ctrl: "CTRL", alt: "ALT", shift: "SHIFT", altgr: "ALTGR"
 
     normalKeyStrokeRegex: ///
-        ^(
-            control|alt|shift
-        )|(?:
-            (ctrl-)?
-            (alt-)?
-            (shift-)?
-            (
-                .| enter|space|backspace|delete|tab|escape
-                |pageup|pagedown|home|end|left|right|up|down|f\d{1,2} )
-        )
-        $
-
-        ///
+        ^(?:
+            (?:
+                (?:(?:ctrl|alt|shift|meta|cmd)-)*
+                (.|enter|space|backspace|delete|tab|escape
+                |pageup|pagedown|home|end|left|right|up
+                |down|f\d{1,2}))
+            |(
+                control|ctrl|alt|shift|meta|cmd
+            )
+        )$ ///
 
     vimEscapedRegex: ///
         <(
@@ -299,40 +296,62 @@ KeyKit =
         if keystroke.length == 1
             return @fromChar(keystroke)
 
-        [match, mod, ctrl, alt, shift, key] = keystroke.match @normalKeyStrokeRegex
+        [match, key, mod] = keystroke.match @normalKeyStrokeRegex
+        console.log keystroke.match @normalKeyStrokeRegex
 
-        ctrl = ctrl?
-        alt = alt?
-        shift = shift?
+        if mod?
+            mod = 'meta' if mod is 'cmd'
+            mod = 'control' if mod is 'trl'
+            code = Key.code(mod)
+            switch mod
+                when 'control'          then ctrl = true
+                when 'alt'              then alt = true
+                when 'shift'            then shift = true
+                when 'meta'             then meta = true
 
-        if key.length == 1
-            name = KeyKit.unshift(key)
+            return new KeyStroke
+                ctrl:  ctrl ? false
+                alt:   alt ? false
+                shift: shift ? false
+                meta:  meta ? false
+                code:  code
         else
-            name = key
+            ctrl   = keystroke.match(/ctrl-/)?
+            alt    = keystroke.match(/alt-/)?
+            shift  = keystroke.match(/shift-/)?
+            meta   = keystroke.match(/meta-/)?
+            meta  |= keystroke.match(/cmd-/)?
 
-        code = Key.code(name)
-        # return null unless code?
+            if key.length == 1
+                name = KeyKit.unshift(key)
+            else
+                name = key
 
-        #
-        # console.debug match
-        # console.debug name
-        return new KeyStroke {
-            ctrl: ctrl
-            alt: alt
-            shift: shift
-            name: name
-        }
+            return new KeyStroke
+                ctrl:  ctrl
+                alt:   alt
+                shift: shift
+                meta:  meta
+                name:  name
 
 
     fromKBEvent: (event) ->
-        new KeyStroke {
-            code: event.keyCode || event.which
-            ctrl: event.ctrlKey || false
-            alt: event.altKey || false
-            shift: event.shiftKey || false
-            name: @keynameByCode[event.keyCode || event.which]
-            identifier: event.keyIdentifier || null
-        }
+        if event.type == 'keydown'
+            new KeyStroke
+                code: event.keyCode || event.which
+                ctrl: event.ctrlKey || false
+                alt: event.altKey || false
+                shift: event.shiftKey || false
+                meta: event.metaKey || false
+                name: @keynameByCode[event.keyCode || event.which]
+                identifier: event.keyIdentifier || null
+        if event.type == 'keypress'
+            ks = @fromChar(String.fromCharCode(event.charCode))
+            ks.ctrl = event.ctrlKey
+            ks.alt = event.altKey
+            ks.shift = event.shiftKey
+            ks.meta = event.metaKey
+            return ks
 
     isVimEscaped: (k) ->
         return @vimEscapedRegex.test k
