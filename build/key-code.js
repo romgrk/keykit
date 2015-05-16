@@ -1161,7 +1161,7 @@
       }
       for (key in Key) {
         data = Key[key];
-        if (data.name === name) {
+        if (data.name === name.toLowerCase()) {
           return data.code;
         }
       }

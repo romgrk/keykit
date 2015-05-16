@@ -3,8 +3,6 @@
   var Key, KeyCode, KeyExecuter, KeyKit, KeyStroke, _, _ref,
     __slice = [].slice;
 
-  console.debug = console.log;
-
   _ = require('underscore-plus');
 
   KeyStroke = require('./key-stroke');
@@ -637,7 +635,6 @@
         return this.fromChar(keystroke);
       }
       _ref1 = keystroke.match(this.normalKeyStrokeRegex), match = _ref1[0], key = _ref1[1], mod = _ref1[2];
-      console.log(keystroke.match(this.normalKeyStrokeRegex));
       if (mod != null) {
         if (mod === 'cmd') {
           mod = 'meta';
@@ -671,7 +668,7 @@
         alt = keystroke.match(/alt-/) != null;
         shift = keystroke.match(/shift-/) != null;
         meta = keystroke.match(/meta-/) != null;
-        meta |= keystroke.match(/cmd-/) != null;
+        meta = meta || (keystroke.match(/cmd-/) != null);
         if (key.length === 1) {
           name = KeyKit.unshift(key);
         } else {
@@ -689,7 +686,7 @@
     fromKBEvent: function(event) {
       var ks;
       if (event.type === 'keydown') {
-        new KeyStroke({
+        return new KeyStroke({
           code: event.keyCode || event.which,
           ctrl: event.ctrlKey || false,
           alt: event.altKey || false,
@@ -703,7 +700,6 @@
         ks = this.fromChar(String.fromCharCode(event.charCode));
         ks.ctrl = event.ctrlKey;
         ks.alt = event.altKey;
-        ks.shift = event.shiftKey;
         ks.meta = event.metaKey;
         return ks;
       }

@@ -1,4 +1,3 @@
-console.debug = console.log
 
 _ = require 'underscore-plus'
 
@@ -297,7 +296,6 @@ KeyKit =
             return @fromChar(keystroke)
 
         [match, key, mod] = keystroke.match @normalKeyStrokeRegex
-        console.log keystroke.match @normalKeyStrokeRegex
 
         if mod?
             mod = 'meta' if mod is 'cmd'
@@ -320,7 +318,7 @@ KeyKit =
             alt    = keystroke.match(/alt-/)?
             shift  = keystroke.match(/shift-/)?
             meta   = keystroke.match(/meta-/)?
-            meta  |= keystroke.match(/cmd-/)?
+            meta   = meta || keystroke.match(/cmd-/)?
 
             if key.length == 1
                 name = KeyKit.unshift(key)
@@ -337,7 +335,7 @@ KeyKit =
 
     fromKBEvent: (event) ->
         if event.type == 'keydown'
-            new KeyStroke
+            return new KeyStroke
                 code: event.keyCode || event.which
                 ctrl: event.ctrlKey || false
                 alt: event.altKey || false
@@ -349,7 +347,6 @@ KeyKit =
             ks = @fromChar(String.fromCharCode(event.charCode))
             ks.ctrl = event.ctrlKey
             ks.alt = event.altKey
-            ks.shift = event.shiftKey
             ks.meta = event.metaKey
             return ks
 

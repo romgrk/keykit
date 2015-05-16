@@ -1149,7 +1149,7 @@ Key=
         if Key[name]?
             return Key[name].code
         for key, data of Key
-            if data.name == name
+            if data.name == name.toLowerCase()
                 return data.code
         return null
 

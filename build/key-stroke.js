@@ -10,7 +10,7 @@
 
   module.exports = KeyStroke = (function() {
     function KeyStroke(options) {
-      var k, kc, key, v, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+      var kc, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (options == null) {
         options = {};
       }
@@ -35,20 +35,14 @@
           this.char = kc.char;
         }
       } else if (this.name != null) {
-        for (k in Key) {
-          v = Key[k];
-          if (v.name === this.name) {
-            key = v;
-          }
-        }
-        this.code = key.code;
+        this.code = Key.code(this.name);
       }
     }
 
     KeyStroke.prototype.toString = function() {
       var s, visible;
       visible = KeyCode[this.code].visible;
-      if (Key.isMod(this.name)) {
+      if (Key.isMod(this.code)) {
         return this.name;
       } else if (!(this.ctrl || this.alt) && visible) {
         return this.char;

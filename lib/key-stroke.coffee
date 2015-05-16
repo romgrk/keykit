@@ -25,11 +25,7 @@ module.exports = class KeyStroke
             else
                 @char = kc.char
         else if @name?
-            for k, v of Key
-                if v.name is @name
-                    key = v
-
-            @code = key.code
+            @code = Key.code(@name)
 
         # @name ?= KeyKit.keynameByCode[@code]
         # @char       = options.char ? KeyKit.getChar @
@@ -37,7 +33,7 @@ module.exports = class KeyStroke
 
     toString: ->
         visible = KeyCode[@code].visible
-        if Key.isMod(@name)
+        if Key.isMod(@code)
             @name
         else if !(@ctrl || @alt) && visible
             @char
