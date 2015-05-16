@@ -7,7 +7,7 @@ task 'build', 'Build project from src/*.coffee to lib/*.js', ->
         throw err if err
         console.log stdout + stderr
 
-option '-m', '--message [MESSAGE]', 'set commit message'
+option '-m', '--message [MESSAGE]', 'set commit message for `git`'
 task 'git', 'commit -am and push', (options) ->
     console.log 'commit...'
 
