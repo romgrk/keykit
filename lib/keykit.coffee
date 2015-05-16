@@ -6,12 +6,7 @@ KeyStroke      = require './key-stroke'
 KeyExecuter    = require './key-executer'
 {Key, KeyCode} = require './key-code'
 
-module.exports = KeyKit =
-    KeyKit: @
-    KeyExecuter: KeyExecuter
-    KeyStroke: KeyStroke
-    Key: Key
-    KeyCode: KeyCode
+KeyKit =
 
     keynameByVimCode:
         'BS': 'backspace', 'TAB': 'tab', 'CR': 'enter', 'ESC': 'escape',
@@ -381,3 +376,5 @@ module.exports = KeyKit =
 #
 # console.debug '#########'
 # test(c) for c in 'aA1!,< '.split('')
+
+module.exports = {KeyKit, KeyStroke, KeyExecuter, Key, KeyCode}

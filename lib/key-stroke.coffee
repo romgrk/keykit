@@ -12,25 +12,28 @@ module.exports = class KeyStroke
         @shift      = options.shift ? false
         @meta       = options.meta ? false
 
-        @code       = options.code ? options.keyCode ? options.keycode ? null
-
         @name       = options.name ? null
-        # @char       = options.char ? KeyKit.getChar @
-
         @identifier = options.identifier ? null
 
-        @complete()
-
-    complete: ->
+        @code       = options.code ? options.keyCode ? options.keycode ? null
         if @code?
             kc = KeyCode[@code]
             @name = kc.name
-            if kc.shiftable
-                @char = kc.char[@shift]
+            if typeof kc.char isnt 'string'
+                @char = kc.char[0] if !@shift
+                @char = kc.char[1] if @shift
             else
                 @char = kc.char
-        @name ?= KeyKit.keynameByCode[@code]
-        @char ?= KeyKit.getChar @
+        else if @name?
+            for k, v of Key
+                if v.name is @name
+                    key = v
+
+            @code = key.code
+
+        # @name ?= KeyKit.keynameByCode[@code]
+        # @char       = options.char ? KeyKit.getChar @
+
 
     toString: ->
         visible = not KeyCode.isNotVisible(@code)
@@ -53,7 +56,12 @@ module.exports = class KeyStroke
         if _.contains [16, 17, 18], @code
             return ''
         else if !(@ctrl || @alt) && visible
-            unless @char is '<' then @char[@shift] else '<LT>'
+            if typeof kc.char isnt 'string'
+                return '<LT>' if @char is '<'
+                return kc.char[0] unless @shift
+                return kc.char[1] if @shift
+            else
+                return kc.char
         else
             s = ""
             s += (if @ctrl then "C-" else "")

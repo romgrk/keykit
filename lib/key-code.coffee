@@ -1145,6 +1145,19 @@ KeyCode=
         char: null
 
 Key=
+    code: (name) ->
+        if Key[name]?
+            return Key[name].code
+        for key, data of Key
+            if data.name == name
+                return data.code
+        return null
+
+    name: (code) ->
+        if KeyCode[code]?
+            return KeyCode[code].name
+        return null
+
     HELP:
         name: null
         code: 6
@@ -1500,7 +1513,7 @@ Key=
         visible: true
         char: "@"
     KEY_A:
-        name: "A"
+        name: "a"
         code: 65
         printable: true
         visible: true
@@ -1509,7 +1522,7 @@ Key=
           "A"
         ]
     KEY_B:
-        name: "B"
+        name: "b"
         code: 66
         printable: true
         visible: true
@@ -1518,7 +1531,7 @@ Key=
           "B"
         ]
     KEY_C:
-        name: "C"
+        name: "c"
         code: 67
         printable: true
         visible: true
@@ -1527,7 +1540,7 @@ Key=
           "C"
         ]
     KEY_D:
-        name: "D"
+        name: "d"
         code: 68
         printable: true
         visible: true
@@ -1536,7 +1549,7 @@ Key=
           "D"
         ]
     KEY_E:
-        name: "E"
+        name: "e"
         code: 69
         printable: true
         visible: true
@@ -1545,7 +1558,7 @@ Key=
           "E"
         ]
     KEY_F:
-        name: "F"
+        name: "f"
         code: 70
         printable: true
         visible: true
@@ -1554,7 +1567,7 @@ Key=
           "F"
         ]
     KEY_G:
-        name: "G"
+        name: "g"
         code: 71
         printable: true
         visible: true
@@ -1563,7 +1576,7 @@ Key=
           "G"
         ]
     KEY_H:
-        name: "H"
+        name: "h"
         code: 72
         printable: true
         visible: true
@@ -1572,7 +1585,7 @@ Key=
           "H"
         ]
     KEY_I:
-        name: "I"
+        name: "i"
         code: 73
         printable: true
         visible: true
@@ -1581,7 +1594,7 @@ Key=
           "I"
         ]
     KEY_J:
-        name: "J"
+        name: "j"
         code: 74
         printable: true
         visible: true
@@ -1590,7 +1603,7 @@ Key=
           "J"
         ]
     KEY_K:
-        name: "K"
+        name: "k"
         code: 75
         printable: true
         visible: true
@@ -1599,7 +1612,7 @@ Key=
           "K"
         ]
     KEY_L:
-        name: "L"
+        name: "l"
         code: 76
         printable: true
         visible: true
@@ -1608,7 +1621,7 @@ Key=
           "L"
         ]
     KEY_M:
-        name: "M"
+        name: "m"
         code: 77
         printable: true
         visible: true
@@ -1617,7 +1630,7 @@ Key=
           "M"
         ]
     KEY_N:
-        name: "N"
+        name: "n"
         code: 78
         printable: true
         visible: true
@@ -1626,7 +1639,7 @@ Key=
           "N"
         ]
     KEY_O:
-        name: "O"
+        name: "o"
         code: 79
         printable: true
         visible: true
@@ -1635,7 +1648,7 @@ Key=
           "O"
         ]
     KEY_P:
-        name: "P"
+        name: "p"
         code: 80
         printable: true
         visible: true
@@ -1644,7 +1657,7 @@ Key=
           "P"
         ]
     KEY_Q:
-        name: "Q"
+        name: "q"
         code: 81
         printable: true
         visible: true
@@ -1653,7 +1666,7 @@ Key=
           "Q"
         ]
     KEY_R:
-        name: "R"
+        name: "r"
         code: 82
         printable: true
         visible: true
@@ -1662,7 +1675,7 @@ Key=
           "R"
         ]
     KEY_S:
-        name: "S"
+        name: "s"
         code: 83
         printable: true
         visible: true
@@ -1671,7 +1684,7 @@ Key=
           "S"
         ]
     KEY_T:
-        name: "T"
+        name: "t"
         code: 84
         printable: true
         visible: true
@@ -1680,7 +1693,7 @@ Key=
           "T"
         ]
     KEY_U:
-        name: "U"
+        name: "u"
         code: 85
         printable: true
         visible: true
@@ -1689,7 +1702,7 @@ Key=
           "U"
         ]
     KEY_V:
-        name: "V"
+        name: "v"
         code: 86
         printable: true
         visible: true
@@ -1698,7 +1711,7 @@ Key=
           "V"
         ]
     KEY_W:
-        name: "W"
+        name: "w"
         code: 87
         printable: true
         visible: true
@@ -1707,7 +1720,7 @@ Key=
           "W"
         ]
     KEY_X:
-        name: "X"
+        name: "x"
         code: 88
         printable: true
         visible: true
@@ -1716,7 +1729,7 @@ Key=
           "X"
         ]
     KEY_Y:
-        name: "Y"
+        name: "y"
         code: 89
         printable: true
         visible: true
@@ -1725,7 +1738,7 @@ Key=
           "Y"
         ]
     KEY_Z:
-        name: "Z"
+        name: "z"
         code: 90
         printable: true
         visible: true
