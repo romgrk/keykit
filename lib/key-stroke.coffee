@@ -19,7 +19,7 @@ module.exports = class KeyStroke
         if @code?
             kc = KeyCode[@code]
             @name = kc.name
-            if typeof kc.char isnt 'string'
+            if _.isArray kc.char
                 @char = kc.char[0] if !@shift
                 @char = kc.char[1] if @shift
             else
