@@ -36,8 +36,8 @@ module.exports = class KeyStroke
 
 
     toString: ->
-        visible = not KeyCode.isNotVisible(@code)
-        if KeyCode.isMod(@code)
+        visible = KeyCode[@code].visible
+        if Key.isMod(@name)
             @name
         else if !(@ctrl || @alt) && visible
             @char

@@ -1158,6 +1158,16 @@ Key=
             return KeyCode[code].name
         return null
 
+    isMod: (arg) ->
+        isMod = false
+        if typeof arg is 'string'
+            isMod |= arg == 'ctrl' || arg == 'alt'
+            isMod |= arg == 'shift' || arg == 'cmd' || arg == 'meta'
+        else
+            isMod |= arg == Key.CONTROL.code || arg == Key.ALT.code
+            isMod |= arg == Key.SHIFT.code || arg == Key.META.code
+        return isMod
+
     HELP:
         name: null
         code: 6
