@@ -461,24 +461,4 @@ KeyKit =
 
 
 
-# for k, v of KeyKit.keynameByVimCode
-    # vimCodeByName[v] = k
-# console.log KeyKit.vimCodeByKeyname
-
-# obj = {true: 'a', false: 'b'}
-# console.debug obj[true]
-
-# for keycode, keyname of KeyKit.keynameByCode
-    # console.debug keycode, ':', keyname
-
-# keyCode
-# idx:int           keycode
-#   name:String
-#   char:String     produced char, if applicable
-#
-# console.debug '#########'
-# test(c) for c in 'aA1!,< '.split('')
-
 module.exports = {KeyKit, KeyStroke, KeyExecuter, Key, KeyCode}
-
-console.log KeyKit.isShifted('A')

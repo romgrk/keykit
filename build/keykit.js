@@ -860,6 +860,4 @@
     KeyCode: KeyCode
   };
 
-  console.log(KeyKit.isShifted('A'));
-
 }).call(this);
