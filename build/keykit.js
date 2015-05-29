@@ -789,8 +789,14 @@
       }
       return console.log('up: ', this.dispatch(this.createKBEvent('keyup', key)));
     },
-    createKBEvent: function(type, key) {
+    createKBEvent: function(type, key, target) {
       var args, e;
+      if (typeof key === 'string') {
+        key = KeyKit.fromKeyStroke(key);
+      }
+      if (!(key instanceof KeyStroke)) {
+        throw new Error('argument `key` is not a KeyStroke');
+      }
       e = document.createEvent('KeyboardEvent');
       args = [true, true, null, key.identifier, 0, key.ctrl, key.alt, key.shift, key.meta];
       e.initKeyboardEvent.apply(e, [type].concat(__slice.call(args)));
@@ -831,7 +837,7 @@
       e._keyCode = key.code;
       e._keyChar = key.char;
       e._name = key.name;
-      e.target = document.activeElement;
+      e.target = target != null ? target : document.activeElement;
       return e;
     },
     createTextEvent: function(key) {

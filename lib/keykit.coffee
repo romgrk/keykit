@@ -412,7 +412,13 @@ KeyKit =
 
         console.log 'up: ', @dispatch @createKBEvent('keyup', key)
 
-    createKBEvent: (type, key) ->
+    createKBEvent: (type, key, target) ->
+        if typeof key is 'string'
+            key = KeyKit.fromKeyStroke key
+
+        unless key instanceof KeyStroke
+            throw new Error 'argument `key` is not a KeyStroke'
+
         e = document.createEvent('KeyboardEvent')
         args = [true, # bubbles
                 true, # cancelable
@@ -438,7 +444,7 @@ KeyKit =
         e._keyChar       = key.char
         e._name          = key.name
 
-        e.target = document.activeElement
+        e.target = target ? document.activeElement
 
         return e
 
