@@ -4,7 +4,7 @@ _ = require 'underscore-plus'
 KeyStroke      = require './key-stroke'
 KeySequence    = require './key-sequence'
 
-KeyKit =
+class KeyKit
 
     keysByCode:    require './key-codes'
     keysBySysname: require './key-sysnames'
@@ -527,6 +527,7 @@ KeyKit =
         keySequence = new KeySequence sequence
         return keySequence
 
+kit = new KeyKit
+_.extend kit, {KeyStroke, KeySequence}
 
-_.extend KeyKit, {KeyStroke, KeySequence}
-module.exports = KeyKit
+module.exports = kit
