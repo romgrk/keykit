@@ -5,7 +5,7 @@ KeyKit = require './keykit'
 
 module.exports =
 class KeySequence
-    
+
     keys:     null
     running:  null
 
@@ -13,7 +13,7 @@ class KeySequence
         @keys = KeyKit.getKeySequence sequence
         @running = false
 
-    handler:  (event) =>
+    execute: (event) =>
         if @running
             event.abortKeyBinding()
             return

@@ -3,9 +3,54 @@ _ = require 'underscore-plus'
 
 KeyStroke      = require './key-stroke'
 KeySequence    = require './key-sequence'
-{Key, KeyCode} = require './keys'
 
 KeyKit =
+
+    keysByCode:    require './key-codes'
+    keysBySysname: require './key-sysnames'
+
+    findByName: (name) ->
+        if @keysBySysname[name]?
+            return @keysBySysname[name]
+
+        for key, data of @keysBySysname
+            if data.name == name.toLowerCase()
+                return data
+
+        return null
+
+    findByCode: (code) ->
+        if @keysByCode[code]?
+            return @keysByCode[code]
+        return null
+
+    # Public: find data for given key
+    #
+    # * `arg` {String} name or {Integer} keycode
+    #
+    # Returns {object}
+    key: (key) ->
+        if typeof key is 'string'
+            return @findByName key
+        else
+            return @findByCode key
+
+    # Public: test if key is a modifier
+    #
+    # * `arg` {String} name or {Integer} keycode
+    #
+    # Returns {Boolean}
+    isModifier: (arg) ->
+        isMod = false
+        if typeof arg is 'string'
+            isMod |= arg == 'ctrl' || arg == 'alt'
+            isMod |= arg == 'shift' || arg == 'cmd' || arg == 'meta'
+        else
+            Key = @keysBySysname
+            isMod |= arg == Key.CONTROL.code || arg == Key.ALT.code
+            isMod |= arg == Key.SHIFT.code || arg == Key.META.code
+        return isMod
+
     nonPrintableCodes: [
         16, 17, 18, 224, 225, 8, 27, 33, 34, 35, 36, 37,
         39, 40, 45, 46, 112, 113, 114, 115, 116, 117, 118
@@ -300,7 +345,7 @@ KeyKit =
         if mod?
             mod = 'meta' if mod is 'cmd'
             mod = 'control' if mod is 'trl'
-            code = Key.code(mod)
+            code = @key(mod).code
             switch mod
                 when 'control'          then ctrl = true
                 when 'alt'              then alt = true
@@ -472,7 +517,7 @@ KeyKit =
 
     getKeyExec: (sequence) ->
         keySequence = new KeySequence sequence
-        return keySequence.handler
+        return keySequence.execute
 
     getKeySequence: (sequence) ->
         keys = @splitVimTokens sequence
@@ -483,5 +528,5 @@ KeyKit =
         return keySequence
 
 
-
-module.exports = {KeyKit, KeyStroke, KeySequence, Key, KeyCode}
+_.extend KeyKit, {KeyStroke, KeySequence}
+module.exports = KeyKit

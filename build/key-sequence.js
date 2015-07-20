@@ -13,12 +13,12 @@
     KeySequence.prototype.running = null;
 
     function KeySequence(sequence) {
-      this.handler = __bind(this.handler, this);
+      this.execute = __bind(this.execute, this);
       this.keys = KeyKit.getKeySequence(sequence);
       this.running = false;
     }
 
-    KeySequence.prototype.handler = function(event) {
+    KeySequence.prototype.execute = function(event) {
       if (this.running) {
         event.abortKeyBinding();
         return;
