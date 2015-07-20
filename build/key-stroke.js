@@ -6,7 +6,7 @@
 
   KeyKit = require('./keykit');
 
-  _ref = require('./key-code'), Key = _ref.Key, KeyCode = _ref.KeyCode;
+  _ref = require('./keys'), Key = _ref.Key, KeyCode = _ref.KeyCode;
 
   module.exports = KeyStroke = (function() {
     function KeyStroke(options) {

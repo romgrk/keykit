@@ -2,7 +2,7 @@
 _ = require 'underscore-plus'
 
 KeyKit         = require './keykit'
-{Key, KeyCode} = require './key-code'
+{Key, KeyCode} = require './keys'
 
 module.exports =
 class KeyStroke

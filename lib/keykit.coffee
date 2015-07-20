@@ -3,7 +3,7 @@ _ = require 'underscore-plus'
 
 KeyStroke      = require './key-stroke'
 KeySequence    = require './key-sequence'
-{Key, KeyCode} = require './key-code'
+{Key, KeyCode} = require './keys'
 
 KeyKit =
     nonPrintableCodes: [
