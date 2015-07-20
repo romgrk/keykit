@@ -1,10 +1,11 @@
 
 _ = require 'underscore-plus'
 
-KeyKit = require './keykit'
+KeyKit         = require './keykit'
 {Key, KeyCode} = require './key-code'
 
-module.exports = class KeyStroke
+module.exports =
+class KeyStroke
 
     constructor: (options={}) ->
         @ctrl       = options.ctrl ? false
