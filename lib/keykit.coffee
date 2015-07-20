@@ -2,7 +2,7 @@
 _ = require 'underscore-plus'
 
 KeyStroke      = require './key-stroke'
-KeyExecuter    = require './key-executer'
+KeySequence    = require './key-sequence'
 {Key, KeyCode} = require './key-code'
 
 KeyKit =
@@ -471,17 +471,17 @@ KeyKit =
         @trigger k for k in keys
 
     getKeyExec: (sequence) ->
-        keyExecuter = new KeyExecuter sequence
-        return keyExecuter.handler
+        keySequence = new KeySequence sequence
+        return keySequence.handler
 
     getKeySequence: (sequence) ->
         keys = @splitVimTokens sequence
         return  _.map keys, (k) => @resolveKey k
 
-    createKeyExecuter: (sequence) ->
-        keyExecuter = new KeyExecuter sequence
-        return keyExecuter
+    createKeySequence: (sequence) ->
+        keySequence = new KeySequence sequence
+        return keySequence
 
 
 
-module.exports = {KeyKit, KeyStroke, KeyExecuter, Key, KeyCode}
+module.exports = {KeyKit, KeyStroke, KeySequence, Key, KeyCode}

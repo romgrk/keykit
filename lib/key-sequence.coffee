@@ -3,7 +3,9 @@ _ = require 'underscore-plus'
 
 KeyKit = require './keykit'
 
-module.exports = class KeyExecuter
+module.exports =
+class KeySequence
+    
     keys:     null
     running:  null
 
