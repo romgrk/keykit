@@ -1,13 +1,9 @@
 
 _ = require 'underscore-plus'
 
-KeyStroke      = require './key-stroke'
-KeySequence    = require './key-sequence'
+KeyStroke = require './key-stroke'
 
 module.exports = KeyKit =
-
-    KeyStroke:   KeyStroke
-    KeySequence: KeySequence
 
     keysByCode:    require './key-codes'
     keysBySysname: require './key-sysnames'
@@ -38,20 +34,20 @@ module.exports = KeyKit =
         else
             return @findByCode key
 
-    # Public: test if key is a modifier
+    # Public: tests if `arg` is a modifier key
     #
     # * `arg` {String} name or {Integer} keycode
     #
     # Returns {Boolean}
     isModifier: (arg) ->
         isMod = false
+
         if typeof arg is 'string'
             isMod |= arg == 'ctrl' || arg == 'alt'
             isMod |= arg == 'shift' || arg == 'cmd' || arg == 'meta'
         else
-            Key = @keysBySysname
-            isMod |= arg == Key.CONTROL.code || arg == Key.ALT.code
-            isMod |= arg == Key.SHIFT.code || arg == Key.META.code
+            isMod = _.contains [16, 17, 18, 224], arg
+
         return isMod
 
     nonPrintableCodes: [
@@ -215,15 +211,12 @@ module.exports = KeyKit =
         ///gi
 
     ###
-    Section: helpers
+    Section: char-helpers
     ###
 
-    getChar: (key) ->
-        return null unless @isPrintable key.code
-        char = @keycharByCode[key.code]
-        char = @shift char if key.shift
-        return char
-
+    # Public: return `true` if `c` is an alphabetic character,
+    # `false` otherwise.
+    # * `c` {String}
     isAlpha: (c) ->
         return /a-zA-Z/.test c
 
@@ -260,7 +253,7 @@ module.exports = KeyKit =
         not /[^A-Z]/.test c
 
     isChar: (c) ->
-        c.length == 1
+        c.length == 1 && typeof c == 'string'
 
     isPrintable: (arg) ->
         if typeof arg == "string"
@@ -268,6 +261,7 @@ module.exports = KeyKit =
         else
             return not _.contains @nonPrintableCodes, arg
 
+    # Public: tests if {String} `c` is a visible character
     isVisible: (c) ->
         return false unless c?
         /[^\s]/.test c
@@ -276,129 +270,7 @@ module.exports = KeyKit =
     Section: key parsing
     ###
 
-    fromChar: (c) ->
-        unless c?
-            console.error new Error 'no argument'
-        unless typeof c is 'string'
-            console.error new Error('argument is not a string: ' + typeof c)
-
-        return null if c.length != 1
-        char = c
-
-        shift = @isShifted(c)
-        if @isAlpha(c)
-            name = @shift(c)
-        else if @isVisible(c)
-            name = @unshift(c)
-        else
-            name = switch c
-                when '\n' then 'enter'
-                when '\t' then 'tab'
-                when ' ' then 'space'
-            return null unless name?
-            char = c
-        code       = @keycodeByName[name]
-        identifier = @unicode(c)
-
-        return new KeyStroke {
-            shift: shift, name: name, code:code,
-            identifier: identifier, char: char }
-
-    fromVim: (keysym) ->
-        return @fromChar(keysym) if @isChar(keysym)
-        return null unless @isVimEscaped(keysym)
-
-        [mods, vimkey] = keysym.match(@vimEscapedRegex)[2..3]
-        return null unless vimkey?
-
-        ctrl  = /C-/i.test mods
-        alt   = /A-/i.test mods
-        shift = /S-/i.test mods
-        meta  = /M-/i.test mods
-
-        name = @keynameByVimCode[vimkey.toUpperCase()] || vimkey
-        if @isShifted name
-            name = @unshift(name)
-            shift = true
-
-        code = @keycodeByName[name]
-
-        if @isChar name
-            identifier = @unicode(name)
-            # char = @getChar name
-        else
-            identifier = name
-            # char = switch name
-            #     when "enter" then "\n"
-            #     when "space" then " "
-            #     when "tab" then "\t"
-            #     else undefined
-
-        new KeyStroke {
-            ctrl: ctrl, alt:alt, shift:shift, meta: meta
-            name: name, code: code, identifier: identifier }
-            # , char: char }
-
-    fromKeyStroke: (keystroke) ->
-        if keystroke.length == 1
-            return @fromChar(keystroke)
-
-        [match, key, mod] = keystroke.match @normalKeyStrokeRegex
-
-        if mod?
-            mod = 'meta' if mod is 'cmd'
-            mod = 'control' if mod is 'trl'
-            code = @key(mod).code
-            switch mod
-                when 'control'          then ctrl = true
-                when 'alt'              then alt = true
-                when 'shift'            then shift = true
-                when 'meta'             then meta = true
-
-            return new KeyStroke
-                ctrl:  ctrl ? false
-                alt:   alt ? false
-                shift: shift ? false
-                meta:  meta ? false
-                code:  code
-        else
-            ctrl   = keystroke.match(/ctrl-/)?
-            alt    = keystroke.match(/alt-/)?
-            shift  = keystroke.match(/shift-/)?
-            meta   = keystroke.match(/meta-/)?
-            meta   = meta || keystroke.match(/cmd-/)?
-
-            if key.length == 1
-                name = KeyKit.unshift(key)
-            else
-                name = key
-
-            return new KeyStroke
-                ctrl:  ctrl
-                alt:   alt
-                shift: shift
-                meta:  meta
-                name:  name
-
-
-    fromKBEvent: (event) ->
-        if event.type == 'keydown' || event.type == 'keyup'
-            return new KeyStroke
-                code: event.keyCode || event.which
-                ctrl: event.ctrlKey || false
-                alt: event.altKey || false
-                shift: event.shiftKey || false
-                meta: event.metaKey || false
-                name: @keynameByCode[event.keyCode || event.which]
-                identifier: event.keyIdentifier || null
-        if event.type == 'keypress'
-            ks = @fromChar(String.fromCharCode(event.charCode))
-            ks.ctrl = event.ctrlKey
-            ks.alt = event.altKey
-            ks.meta = event.metaKey
-            return ks
-        return null
-
+    # Public: checks if {String} `k` is vim-notation
     isVimEscaped: (k) ->
         return @vimEscapedRegex.test k
 
@@ -410,8 +282,7 @@ module.exports = KeyKit =
             else c
 
     getNormalizedKey: (key) ->
-        unless key instanceof KeyStroke
-            key = @resolveKey key
+        key = require('./key-stroke').parse key
 
         normalizedKey = ""
         normalizedKey += "ctrl-" if key.ctrl
@@ -432,40 +303,34 @@ module.exports = KeyKit =
     splitVimTokens: (sequence) ->
         matches = sequence.match @vimSequenceRegex
 
-    resolveKey: (keysym) ->
-        if @isChar keysym
-            return @fromChar keysym
-        if @isVimEscaped keysym
-            return @fromVim keysym
-        console.error "KeyKit: couldn't resolve key (#{keysym})"
-        return null
+    ###
+    Section: events/actions
+    ###
 
-    trigger: (key) ->
-        unless key instanceof KeyStroke
-            key = @resolveKey(key)
-        return unless key?
+    # trigger: (keysym) ->
+    #     key = KeyStroke.parse keysym
+    #     return unless key?
+    #
+    #     downEvent = @createKBEvent('keydown', key)
+    #     canceled = !@dispatch downEvent
+    #     console.log 'down: ', !canceled
+    #     console.log downEvent
+    #
+    #     if @isPrintable key.code
+    #         console.log 'press: ', @dispatch @createKBEvent('keypress', key)
+    #
+    #     unless canceled
+    #         if @dispatch @createTextEvent(key)
+    #             console.log "textInput: #{key.char}"
+    #             console.log document.activeElement.getModel?().insertText key.char
+    #
+    #     console.log 'up: ', @dispatch @createKBEvent('keyup', key)
 
-        downEvent = @createKBEvent('keydown', key)
-        canceled = !@dispatch downEvent
-        console.log 'down: ', !canceled
-        console.log downEvent
+    createKBEvent: (type, keysym, target) ->
+        key = require('./key-stroke').parse keysym
 
-        if @isPrintable key.code
-            console.log 'press: ', @dispatch @createKBEvent('keypress', key)
-
-        unless canceled
-            if @dispatch @createTextEvent(key)
-                console.log "textInput: #{key.char}"
-                console.log document.activeElement.getModel?().insertText key.char
-
-        console.log 'up: ', @dispatch @createKBEvent('keyup', key)
-
-    createKBEvent: (type, key, target) ->
-        if typeof key is 'string'
-            key = KeyKit.fromKeyStroke key
-
-        unless key instanceof KeyStroke
-            throw new Error 'argument `key` is not a KeyStroke'
+        unless key? and key instanceof KeyStroke
+            throw new Error 'argument `keysym` couldnt be resolved'
 
         e = document.createEvent('KeyboardEvent')
         args = [true, # bubbles
@@ -520,4 +385,4 @@ module.exports = KeyKit =
 
     getKeystrokes: (sequence) ->
         keys = @splitVimTokens sequence
-        return  _.map keys, (k) => @resolveKey k
+        return  _.map keys, (k) -> require('./key-stroke').parse k

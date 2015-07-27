@@ -2,7 +2,7 @@
   "name": "keykit",
   "version": "1.1.6",
   "description": "KeyEvents and KeyStrokes general utilities",
-  "main": "build/keykit.js",
+  "main": "build/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
