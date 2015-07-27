@@ -8,13 +8,15 @@
   KeyKit = require('./keykit');
 
   module.exports = KeySequence = (function() {
+    KeySequence.prototype.callbackReference = null;
+
     KeySequence.prototype.keys = null;
 
     KeySequence.prototype.running = null;
 
     function KeySequence(sequence) {
       this.execute = __bind(this.execute, this);
-      this.keys = KeyKit.getKeySequence(sequence);
+      this.keys = KeyKit.getKeystrokes(sequence);
       this.running = false;
     }
 
@@ -45,6 +47,13 @@
         }
       }
       return this.dispatch(KeyKit.createKBEvent('keyup', key));
+    };
+
+    KeySequence.prototype.getCallback = function() {
+      if (this.callbackReference == null) {
+        this.callbackReference = this.execute.bind(this);
+      }
+      return this.callbackReference;
     };
 
     KeySequence.prototype.dispatch = function(event) {

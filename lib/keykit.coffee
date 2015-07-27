@@ -4,7 +4,10 @@ _ = require 'underscore-plus'
 KeyStroke      = require './key-stroke'
 KeySequence    = require './key-sequence'
 
-class KeyKit
+module.exports = KeyKit =
+
+    KeyStroke:   KeyStroke
+    KeySequence: KeySequence
 
     keysByCode:    require './key-codes'
     keysBySysname: require './key-sysnames'
@@ -515,19 +518,6 @@ class KeyKit
     executeKeys: (keys) ->
         @trigger k for k in keys
 
-    getKeyExec: (sequence) ->
-        keySequence = new KeySequence sequence
-        return keySequence.execute
-
-    getKeySequence: (sequence) ->
+    getKeystrokes: (sequence) ->
         keys = @splitVimTokens sequence
         return  _.map keys, (k) => @resolveKey k
-
-    createKeySequence: (sequence) ->
-        keySequence = new KeySequence sequence
-        return keySequence
-
-kit = new KeyKit
-_.extend kit, {KeyStroke, KeySequence}
-
-module.exports = kit

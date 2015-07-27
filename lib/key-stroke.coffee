@@ -1,7 +1,7 @@
 
 _ = require 'underscore-plus'
 
-KeyKit         = require './keykit'
+KeyKit = require './keykit'
 
 module.exports =
 class KeyStroke
@@ -17,8 +17,9 @@ class KeyStroke
 
         @code       = options.code ? options.keyCode ? options.keycode ? null
 
+        kit = require './keykit'
         if @code?
-            key = KeyKit.findByCode(@code)
+            key = kit.findByCode(@code)
             @name = key.name
             if _.isArray key.char
                 @char = key.char[0] if !@shift
@@ -26,14 +27,16 @@ class KeyStroke
             else
                 @char = key.char
         else if @name?
-            @code = KeyKit.findByName(@name).code
+            @code = kit.findByName(@name).code
         else
             throw new Error "Keycode or name needed"
 
 
     toString: ->
-        visible = KeyCode[@code].visible
-        if KeyKit.isModifier(@code)
+        kit = require './keykit'
+
+        visible = kit.keysByCode[@code].visible
+        if kit.isModifier(@code)
             @name
         else if !(@ctrl || @alt) && visible
             @char
@@ -47,7 +50,9 @@ class KeyStroke
             return s
 
     vimEscaped: ->
-        kc = KeyCode[@code]
+        kit = require './keykit'
+
+        kc = kit.keysByCode[@code]
         visible = kc.visible
         if _.contains [16, 17, 18], @code
             return ''
@@ -63,8 +68,8 @@ class KeyStroke
             s += (if @ctrl then "C-" else "")
             s += (if @alt then "A-" else "")
             s += (if @shift then "S-" else "")
-            console.log KeyKit
-            name = KeyKit.vimCodeByKeyname[@name] || @name.toLowerCase()
+
+            name = kit.vimCodeByKeyname[@name] || @name.toLowerCase()
             if name is 'LT' then name = '<LT>'
             s += name
 

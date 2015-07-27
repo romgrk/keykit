@@ -6,11 +6,13 @@ KeyKit = require './keykit'
 module.exports =
 class KeySequence
 
+    callbackReference: null
+
     keys:     null
     running:  null
 
     constructor: (sequence) ->
-        @keys = KeyKit.getKeySequence sequence
+        @keys = KeyKit.getKeystrokes sequence
         @running = false
 
     execute: (event) =>
@@ -38,6 +40,11 @@ class KeySequence
                 document.activeElement.getModel?().insertText key.char
 
         @dispatch KeyKit.createKBEvent('keyup', key)
+
+    getCallback: ->
+        unless @callbackReference?
+            @callbackReference = @execute.bind(@)
+        return @callbackReference
 
     dispatch: (event) ->
         document.activeElement.dispatchEvent event

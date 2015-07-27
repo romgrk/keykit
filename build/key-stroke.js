@@ -8,7 +8,7 @@
 
   module.exports = KeyStroke = (function() {
     function KeyStroke(options) {
-      var key, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var key, kit, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
       if (options == null) {
         options = {};
       }
@@ -19,8 +19,9 @@
       this.name = (_ref4 = options.name) != null ? _ref4 : null;
       this.identifier = (_ref5 = options.identifier) != null ? _ref5 : null;
       this.code = (_ref6 = (_ref7 = (_ref8 = options.code) != null ? _ref8 : options.keyCode) != null ? _ref7 : options.keycode) != null ? _ref6 : null;
+      kit = require('./keykit');
       if (this.code != null) {
-        key = KeyKit.findByCode(this.code);
+        key = kit.findByCode(this.code);
         this.name = key.name;
         if (_.isArray(key.char)) {
           if (!this.shift) {
@@ -33,16 +34,17 @@
           this.char = key.char;
         }
       } else if (this.name != null) {
-        this.code = KeyKit.findByName(this.name).code;
+        this.code = kit.findByName(this.name).code;
       } else {
         throw new Error("Keycode or name needed");
       }
     }
 
     KeyStroke.prototype.toString = function() {
-      var s, visible;
-      visible = KeyCode[this.code].visible;
-      if (KeyKit.isModifier(this.code)) {
+      var kit, s, visible;
+      kit = require('./keykit');
+      visible = kit.keysByCode[this.code].visible;
+      if (kit.isModifier(this.code)) {
         return this.name;
       } else if (!(this.ctrl || this.alt) && visible) {
         return this.char;
@@ -57,8 +59,9 @@
     };
 
     KeyStroke.prototype.vimEscaped = function() {
-      var kc, name, s, visible;
-      kc = KeyCode[this.code];
+      var kc, kit, name, s, visible;
+      kit = require('./keykit');
+      kc = kit.keysByCode[this.code];
       visible = kc.visible;
       if (_.contains([16, 17, 18], this.code)) {
         return '';
@@ -81,8 +84,7 @@
         s += (this.ctrl ? "C-" : "");
         s += (this.alt ? "A-" : "");
         s += (this.shift ? "S-" : "");
-        console.log(KeyKit);
-        name = KeyKit.vimCodeByKeyname[this.name] || this.name.toLowerCase();
+        name = kit.vimCodeByKeyname[this.name] || this.name.toLowerCase();
         if (name === 'LT') {
           name = '<LT>';
         }
