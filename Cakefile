@@ -5,7 +5,13 @@
 task 'build', 'Build project from src/*.coffee to lib/*.js', ->
     exec 'coffee --compile --output build/ lib/', (err, stdout, stderr) ->
         throw err if err
-        console.log stdout + stderr
+        console.log 'stdout: ', stdout if stdout isnt ''
+        console.log 'stderr: ', stderr if stderr isnt ''
+        console.log 'Done compiling.'
+
+option '-m', '--message [MESSAGE]', 'set echo message'
+task 'echo', 'echo message', (options) ->
+    console.log "options -m: #{options.message}"
 
 option '-m', '--message [MESSAGE]', 'set commit message for `git`'
 task 'git', 'commit -am and push', (options) ->
