@@ -1,7 +1,8 @@
 
 
-KeyKit      = kit = require './keykit'
-KeyStroke   = require './key-stroke'
-KeySequence = require './key-sequence'
+KeyKit             = require './keykit'
+KeyKit.KeyKit      = KeyKit
+KeyKit.KeyStroke   = require './key-stroke'
+KeyKit.KeySequence = require './key-sequence'
 
-module.exports = {kit, KeyKit, KeyStroke, KeySequence}
+module.exports = KeyKit
