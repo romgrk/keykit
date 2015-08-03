@@ -16,7 +16,7 @@ module.exports =
         code: 9
         printable: true
         visible: false
-        char: "tab"
+        char: "\t"
     CLEAR:
         name: "clear"
         code: 12
@@ -28,7 +28,7 @@ module.exports =
         code: 13
         printable: true
         visible: false
-        char: "enter"
+        char: "\n"
     RETURN:
         name: "return"
         code: 14
@@ -130,7 +130,7 @@ module.exports =
         code: 32
         printable: true
         visible: false
-        char: "space"
+        char: " "
     PAGE_UP:
         name: "pageup"
         code: 33

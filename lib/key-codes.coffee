@@ -22,7 +22,7 @@ module.exports =
         sysname: "TAB"
         printable: true
         visible: false
-        char: "tab"
+        char: "\t"
     12:
         name: "clear"
         sysname: "CLEAR"
@@ -34,7 +34,7 @@ module.exports =
         sysname: "ENTER"
         printable: true
         visible: false
-        char: "enter"
+        char: "\n"
     14:
         name: "return"
         sysname: "RETURN"
@@ -136,7 +136,7 @@ module.exports =
         sysname: "SPACE"
         printable: true
         visible: false
-        char: "space"
+        char: " "
     33:
         name: "pageup"
         sysname: "PAGE_UP"
