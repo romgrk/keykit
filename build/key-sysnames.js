@@ -20,7 +20,7 @@
       code: 9,
       printable: true,
       visible: false,
-      char: "tab"
+      char: "\t"
     },
     CLEAR: {
       name: "clear",
@@ -34,7 +34,7 @@
       code: 13,
       printable: true,
       visible: false,
-      char: "enter"
+      char: "\n"
     },
     RETURN: {
       name: "return",
@@ -153,7 +153,7 @@
       code: 32,
       printable: true,
       visible: false,
-      char: "space"
+      char: " "
     },
     PAGE_UP: {
       name: "pageup",

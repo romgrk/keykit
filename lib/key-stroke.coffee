@@ -37,8 +37,8 @@ class KeyStroke
             throw new Error 'string exceeds 1 character'
 
         char = c
-
         shift = kit.isShifted(c)
+
         if kit.isAlpha(c)
             name = kit.shift(c)
         else if kit.isVisible(c)
@@ -48,8 +48,7 @@ class KeyStroke
                 when '\n' then 'enter'
                 when '\t' then 'tab'
                 when ' ' then 'space'
-            return null unless name?
-            char = c
+
         code       = kit.keycodeByName[name]
         identifier = kit.unicode(c)
 
@@ -83,16 +82,16 @@ class KeyStroke
             identifier = kit.unicode(name)
         else
             identifier = name
-            # char = switch name
-            #     when "enter" then "\n"
-            #     when "space" then " "
-            #     when "tab" then "\t"
-            #     else undefined
+            char = switch name
+                when "enter" then "\n"
+                when "space" then " "
+                when "tab" then "\t"
+                else undefined
 
         new KeyStroke {
             ctrl: ctrl, alt:alt, shift:shift, meta: meta
-            name: name, code: code, identifier: identifier }
-            # , char: char }
+            name: name, code: code, identifier: identifier
+            , char: char ? null }
 
     @fromKeyStroke: (keystroke) ->
         kit = require './keykit'
@@ -112,17 +111,18 @@ class KeyStroke
                 when 'meta'             then meta = true
 
             return new KeyStroke
-                ctrl:  ctrl ? false
-                alt:   alt ? false
-                shift: shift ? false
-                meta:  meta ? false
-                code:  code
+                identifier: mod
+                name:       mod
+                ctrl:       ctrl ? false
+                alt:        alt ? false
+                shift:      shift ? false
+                meta:       meta ? false
+                code:       code
         else
             ctrl   = keystroke.match(/ctrl-/)?
             alt    = keystroke.match(/alt-/)?
             shift  = keystroke.match(/shift-/)?
-            meta   = keystroke.match(/meta-/)?
-            meta   = meta || keystroke.match(/cmd-/)?
+            meta   = keystroke.match(/meta-/)? || keystroke.match(/cmd-/)?
 
             if key.length == 1
                 name = kit.unshift(key)
@@ -168,6 +168,7 @@ class KeyStroke
         @meta       = options.meta ? false
 
         @name       = options.name ? null
+        @char       = options.char ? null
         @identifier = options.identifier ? null
 
         @code       = options.code ? options.keyCode ? options.keycode ? null
@@ -175,15 +176,18 @@ class KeyStroke
         if @code?
             key = kit.findByCode(@code)
             @name = key.name
+        else if @name?
+            key = kit.findByName(@name)
+            @code = key.code
+        else
+            throw new Error "Keycode or name needed"
+
+        unless @char?
             if _.isArray key.char
                 @char = key.char[0] if !@shift
                 @char = key.char[1] if @shift
             else
                 @char = key.char
-        else if @name?
-            @code = kit.findByName(@name).code
-        else
-            throw new Error "Keycode or name needed"
 
     toString: ->
         visible = kit.keysByCode[@code].visible

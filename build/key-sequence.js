@@ -33,14 +33,11 @@
     };
 
     KeySequence.prototype.trigger = function(key) {
-      var canceled, downEvent, _base;
+      var canceled, downEvent, textEvent, _base;
       downEvent = KeyKit.createKBEvent('keydown', key);
       canceled = !this.dispatch(downEvent);
-      if (KeyKit.isPrintable(key.code)) {
-        this.dispatch(KeyKit.createKBEvent('keypress', key));
-      }
       if (!canceled) {
-        if (this.dispatch(KeyKit.createTextEvent(key))) {
+        if (this.dispatch(textEvent = KeyKit.createTextEvent(key))) {
           if (typeof (_base = document.activeElement).getModel === "function") {
             _base.getModel().insertText(key.char);
           }

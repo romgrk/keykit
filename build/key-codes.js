@@ -27,7 +27,7 @@
       sysname: "TAB",
       printable: true,
       visible: false,
-      char: "tab"
+      char: "\t"
     },
     12: {
       name: "clear",
@@ -41,7 +41,7 @@
       sysname: "ENTER",
       printable: true,
       visible: false,
-      char: "enter"
+      char: "\n"
     },
     14: {
       name: "return",
@@ -160,7 +160,7 @@
       sysname: "SPACE",
       printable: true,
       visible: false,
-      char: "space"
+      char: " "
     },
     33: {
       name: "pageup",

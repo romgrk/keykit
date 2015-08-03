@@ -326,22 +326,26 @@ module.exports = KeyKit =
     #
     #     console.log 'up: ', @dispatch @createKBEvent('keyup', key)
 
-    createKBEvent: (type, keysym, target) ->
+    createKBEvent: (type, keysym, target, options={}) ->
         key = require('./key-stroke').parse keysym
 
         unless key? and key instanceof KeyStroke
-            throw new Error 'argument `keysym` couldnt be resolved'
+            throw new Error "`keysym` couldnt be resolved. (#{keysym})"
 
         e = document.createEvent('KeyboardEvent')
-        args = [true, # bubbles
-                true, # cancelable
-                null, # view
+        args = [true,           # bubbles
+                true,           # cancelable
+                null,           # view
                 key.identifier,
-                0,    # location
+                0,              # location
                 key.ctrl, key.alt, key.shift, key.meta]
 
         e.initKeyboardEvent(type, args...)
-        Object.defineProperty(e, 'keykit', get: -> true)
+
+        e._keyIdentifier = key.identifier
+        e._keyCode       = key.code
+        e._keyChar       = key.char
+        e._name          = key.name
 
         unless type is 'keypress'
             Object.defineProperty(e, 'keyCode', get: -> @_keyCode)
@@ -352,10 +356,8 @@ module.exports = KeyKit =
         Object.defineProperty(e, 'which',           get: -> @_keyCode)
         Object.defineProperty(e, 'keyIdentifier',   get: -> @_keyIdentifier)
 
-        e._keyIdentifier = key.identifier
-        e._keyCode       = key.code
-        e._keyChar       = key.char
-        e._name          = key.name
+        # keykit marker
+        Object.defineProperty(e, 'keykit', get: -> true)
 
         e.target = target ? document.activeElement
 
@@ -364,13 +366,15 @@ module.exports = KeyKit =
     createTextEvent: (key) ->
         e = document.createEvent('TextEvent')
         e.initTextEvent(
-            'textInput', true, true, # (name, bubbles, cancelable
-            document.activeElement, key.char) # view, data)
-
-        Object.defineProperty(e, 'keyCode', get: -> @_keyCode)
-        Object.defineProperty(e, 'which', get: -> @_keyCode)
+            'textInput',    # name
+            true,           # bubbles
+            true,           # cancelable
+            null,           # view
+            key.char)       # data
 
         e._keyCode = key.code
+        Object.defineProperty(e, 'keyCode', get: -> @_keyCode)
+        Object.defineProperty(e, 'which', get: -> @_keyCode)
 
         return e
 

@@ -32,12 +32,11 @@ class KeySequence
         downEvent = KeyKit.createKBEvent('keydown', key)
         canceled = !@dispatch downEvent
 
-        if KeyKit.isPrintable key.code
-            @dispatch KeyKit.createKBEvent('keypress', key)
-
         unless canceled
-            if @dispatch KeyKit.createTextEvent(key)
+            if @dispatch(textEvent = KeyKit.createTextEvent(key))
                 document.activeElement.getModel?().insertText key.char
+            # if KeyKit.isPrintable key.code
+                # @dispatch KeyKit.createKBEvent('keypress', key)
 
         @dispatch KeyKit.createKBEvent('keyup', key)
 

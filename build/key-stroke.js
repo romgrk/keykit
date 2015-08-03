@@ -57,10 +57,6 @@
               return 'space';
           }
         })();
-        if (name == null) {
-          return null;
-        }
-        char = c;
       }
       code = kit.keycodeByName[name];
       identifier = kit.unicode(c);
@@ -74,7 +70,7 @@
     };
 
     KeyStroke.fromVim = function(keysym) {
-      var alt, code, ctrl, identifier, meta, mods, name, shift, vimkey, _ref;
+      var alt, char, code, ctrl, identifier, meta, mods, name, shift, vimkey, _ref;
       kit = require('./keykit');
       if (kit.isChar(keysym)) {
         return this.fromChar(keysym);
@@ -100,6 +96,18 @@
         identifier = kit.unicode(name);
       } else {
         identifier = name;
+        char = (function() {
+          switch (name) {
+            case "enter":
+              return "\n";
+            case "space":
+              return " ";
+            case "tab":
+              return "\t";
+            default:
+              return void 0;
+          }
+        })();
       }
       return new KeyStroke({
         ctrl: ctrl,
@@ -108,7 +116,8 @@
         meta: meta,
         name: name,
         code: code,
-        identifier: identifier
+        identifier: identifier,
+        char: char != null ? char : null
       });
     };
 
@@ -141,6 +150,8 @@
             meta = true;
         }
         return new KeyStroke({
+          identifier: mod,
+          name: mod,
           ctrl: ctrl != null ? ctrl : false,
           alt: alt != null ? alt : false,
           shift: shift != null ? shift : false,
@@ -151,8 +162,7 @@
         ctrl = keystroke.match(/ctrl-/) != null;
         alt = keystroke.match(/alt-/) != null;
         shift = keystroke.match(/shift-/) != null;
-        meta = keystroke.match(/meta-/) != null;
-        meta = meta || (keystroke.match(/cmd-/) != null);
+        meta = (keystroke.match(/meta-/) != null) || (keystroke.match(/cmd-/) != null);
         if (key.length === 1) {
           name = kit.unshift(key);
         } else {
@@ -198,7 +208,7 @@
      */
 
     function KeyStroke(options) {
-      var key, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8;
+      var key, _ref, _ref1, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
       if (options == null) {
         options = {};
       }
@@ -210,11 +220,19 @@
       this.shift = (_ref2 = options.shift) != null ? _ref2 : false;
       this.meta = (_ref3 = options.meta) != null ? _ref3 : false;
       this.name = (_ref4 = options.name) != null ? _ref4 : null;
-      this.identifier = (_ref5 = options.identifier) != null ? _ref5 : null;
-      this.code = (_ref6 = (_ref7 = (_ref8 = options.code) != null ? _ref8 : options.keyCode) != null ? _ref7 : options.keycode) != null ? _ref6 : null;
+      this.char = (_ref5 = options.char) != null ? _ref5 : null;
+      this.identifier = (_ref6 = options.identifier) != null ? _ref6 : null;
+      this.code = (_ref7 = (_ref8 = (_ref9 = options.code) != null ? _ref9 : options.keyCode) != null ? _ref8 : options.keycode) != null ? _ref7 : null;
       if (this.code != null) {
         key = kit.findByCode(this.code);
         this.name = key.name;
+      } else if (this.name != null) {
+        key = kit.findByName(this.name);
+        this.code = key.code;
+      } else {
+        throw new Error("Keycode or name needed");
+      }
+      if (this.char == null) {
         if (_.isArray(key.char)) {
           if (!this.shift) {
             this.char = key.char[0];
@@ -225,10 +243,6 @@
         } else {
           this.char = key.char;
         }
-      } else if (this.name != null) {
-        this.code = kit.findByName(this.name).code;
-      } else {
-        throw new Error("Keycode or name needed");
       }
     }
 

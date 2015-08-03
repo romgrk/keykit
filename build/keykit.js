@@ -627,20 +627,22 @@
     /*
     Section: events/actions
      */
-    createKBEvent: function(type, keysym, target) {
+    createKBEvent: function(type, keysym, target, options) {
       var args, e, key;
+      if (options == null) {
+        options = {};
+      }
       key = require('./key-stroke').parse(keysym);
       if (!((key != null) && key instanceof KeyStroke)) {
-        throw new Error('argument `keysym` couldnt be resolved');
+        throw new Error("`keysym` couldnt be resolved. (" + keysym + ")");
       }
       e = document.createEvent('KeyboardEvent');
       args = [true, true, null, key.identifier, 0, key.ctrl, key.alt, key.shift, key.meta];
       e.initKeyboardEvent.apply(e, [type].concat(__slice.call(args)));
-      Object.defineProperty(e, 'keykit', {
-        get: function() {
-          return true;
-        }
-      });
+      e._keyIdentifier = key.identifier;
+      e._keyCode = key.code;
+      e._keyChar = key.char;
+      e._name = key.name;
       if (type !== 'keypress') {
         Object.defineProperty(e, 'keyCode', {
           get: function() {
@@ -669,17 +671,19 @@
           return this._keyIdentifier;
         }
       });
-      e._keyIdentifier = key.identifier;
-      e._keyCode = key.code;
-      e._keyChar = key.char;
-      e._name = key.name;
+      Object.defineProperty(e, 'keykit', {
+        get: function() {
+          return true;
+        }
+      });
       e.target = target != null ? target : document.activeElement;
       return e;
     },
     createTextEvent: function(key) {
       var e;
       e = document.createEvent('TextEvent');
-      e.initTextEvent('textInput', true, true, document.activeElement, key.char);
+      e.initTextEvent('textInput', true, true, null, key.char);
+      e._keyCode = key.code;
       Object.defineProperty(e, 'keyCode', {
         get: function() {
           return this._keyCode;
@@ -690,7 +694,6 @@
           return this._keyCode;
         }
       });
-      e._keyCode = key.code;
       return e;
     },
     dispatch: function(event) {
