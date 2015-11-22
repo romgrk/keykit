@@ -27,7 +27,7 @@ module.exports = KeyKit =
     #
     # * `arg` {String} name or {Integer} keycode
     #
-    # Returns {object}
+    # Returns key data {object}
     key: (key) ->
         if typeof key is 'string'
             return @findByName key
@@ -306,6 +306,7 @@ module.exports = KeyKit =
     Section: events/actions
     ###
 
+    # XXX unused?
     # trigger: (keysym) ->
     #     key = KeyStroke.parse keysym
     #     return unless key?
