@@ -22,12 +22,13 @@
 
     KeySequence.prototype.execute = function(event) {
       if (this.running) {
-        event.abortKeyBinding();
         return;
       }
       this.running = true;
-      event.preventDefault();
-      event.stopImmediatePropagation();
+      if (event != null) {
+        event.originalEvent.preventDefault();
+        event.originalEvent.stopImmediatePropagation();
+      }
       _.each(this.keys, this.trigger.bind(this));
       return this.running = false;
     };

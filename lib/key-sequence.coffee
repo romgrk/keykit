@@ -17,12 +17,12 @@ class KeySequence
 
     execute: (event) =>
         if @running
-            event.abortKeyBinding()
             return
         @running = true
 
-        event.preventDefault()
-        event.stopImmediatePropagation()
+        if event?
+            event.originalEvent.preventDefault()
+            event.originalEvent.stopImmediatePropagation()
 
         _.each @keys, @trigger.bind(@)
 

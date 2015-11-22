@@ -1,7 +1,7 @@
 
 _ = require 'underscore-plus'
 
-kit = require './keykit'
+kit = null
 
 module.exports =
 class KeyStroke
@@ -11,7 +11,7 @@ class KeyStroke
     ###
 
     @parse: (keysym) ->
-        kit = require './keykit'
+        kit or= require './keykit'
         if keysym instanceof KeyStroke
             return keysym
 

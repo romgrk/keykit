@@ -11,17 +11,17 @@ module.exports = KeyKit =
     findByName: (name) ->
         if @keysBySysname[name]?
             return @keysBySysname[name]
-
         for key, data of @keysBySysname
             if data.name == name.toLowerCase()
                 return data
-
         return null
-
     findByCode: (code) ->
         if @keysByCode[code]?
             return @keysByCode[code]
         return null
+
+    code: (name) -> @findByName(name).code
+    name: (code) -> @findByCode(code).name
 
     # Public: find data for given key
     #
@@ -39,15 +39,14 @@ module.exports = KeyKit =
     # * `arg` {String} name or {Integer} keycode
     #
     # Returns {Boolean}
+    isMod:      (arg) -> @isModifier arg
     isModifier: (arg) ->
         isMod = false
-
         if typeof arg is 'string'
             isMod |= arg == 'ctrl' || arg == 'alt'
             isMod |= arg == 'shift' || arg == 'cmd' || arg == 'meta'
         else
             isMod = _.contains [16, 17, 18, 224], arg
-
         return isMod
 
     nonPrintableCodes: [
