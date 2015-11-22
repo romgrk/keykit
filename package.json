@@ -4,7 +4,8 @@
   "description": "KeyEvents and KeyStrokes general utilities",
   "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "coffee -o build/ -c lib/",
+    "build":      "coffee -o build/ -c lib/"
   },
   "repository": {
     "type": "git",
