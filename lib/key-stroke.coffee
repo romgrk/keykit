@@ -1,17 +1,16 @@
 
-_ = require 'underscore-plus'
+_   = require 'underscore-plus'
+kit = require './keykit'
 
-kit = null
-
-module.exports =
-class KeyStroke
+module.exports = class KeyStroke
 
     ###
     Section: key parsing
     ###
 
     @parse: (keysym) ->
-        kit or= require './keykit'
+        kit ?= require './keykit'     # FIXME ... proper loading
+
         if keysym instanceof KeyStroke
             return keysym
 
@@ -137,14 +136,14 @@ class KeyStroke
                 name:  name
 
     @fromKBEvent: (event) ->
-        kit = require './keykit'
+        kit or= require './keykit'
         if event.type == 'keydown' || event.type == 'keyup'
             return new KeyStroke
-                code: event.keyCode || event.which
-                ctrl: event.ctrlKey || false
-                alt: event.altKey || false
+                code: event.keyCode   || event.which
+                ctrl: event.ctrlKey   || false
+                alt: event.altKey     || false
                 shift: event.shiftKey || false
-                meta: event.metaKey || false
+                meta: event.metaKey   || false
                 name: kit.keynameByCode[event.keyCode || event.which]
                 identifier: event.keyIdentifier || null
         if event.type == 'keypress'
@@ -162,10 +161,11 @@ class KeyStroke
     constructor: (options={}) ->
         kit ?= require './keykit'
 
-        @ctrl       = options.ctrl ? false
-        @alt        = options.alt ? false
-        @shift      = options.shift ? false
-        @meta       = options.meta ? false
+        @ctrl  = options.ctrl  ? false
+        @alt   = options.alt   ? false
+        @shift = options.shift ? false
+        @meta  = options.meta  ? false
+        @cmd   = options.cmd   ? false
 
         @name       = options.name ? null
         @char       = options.char ? null
