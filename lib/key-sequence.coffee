@@ -21,8 +21,9 @@ class KeySequence
         @running = true
 
         if event?
-            event.originalEvent.preventDefault()
-            event.originalEvent.stopImmediatePropagation()
+            event = event.originalEvent ? event
+            event.preventDefault()
+            event.stopImmediatePropagation()
 
         _.each @keys, @trigger.bind(@)
 

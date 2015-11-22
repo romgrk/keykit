@@ -5,49 +5,12 @@ KeyStroke = require './key-stroke'
 
 module.exports = KeyKit =
 
+    ###
+    Data
+    ###
+
     keysByCode:    require './key-codes'
     keysBySysname: require './key-sysnames'
-
-    findByName: (name) ->
-        if @keysBySysname[name]?
-            return @keysBySysname[name]
-        for key, data of @keysBySysname
-            if data.name == name.toLowerCase()
-                return data
-        return null
-    findByCode: (code) ->
-        if @keysByCode[code]?
-            return @keysByCode[code]
-        return null
-
-    code: (name) -> @findByName(name).code
-    name: (code) -> @findByCode(code).name
-
-    # Public: find data for given key
-    #
-    # * `arg` {String} name or {Integer} keycode
-    #
-    # Returns key data {object}
-    key: (key) ->
-        if typeof key is 'string'
-            return @findByName key
-        else
-            return @findByCode key
-
-    # Public: tests if `arg` is a modifier key
-    #
-    # * `arg` {String} name or {Integer} keycode
-    #
-    # Returns {Boolean}
-    isMod:      (arg) -> @isModifier arg
-    isModifier: (arg) ->
-        isMod = false
-        if typeof arg is 'string'
-            isMod |= arg == 'ctrl' || arg == 'alt'
-            isMod |= arg == 'shift' || arg == 'cmd' || arg == 'meta'
-        else
-            isMod = _.contains [16, 17, 18, 224], arg
-        return isMod
 
     nonPrintableCodes: [
         16, 17, 18, 224, 225, 8, 27, 33, 34, 35, 36, 37,
@@ -60,7 +23,7 @@ module.exports = KeyKit =
         ]
 
     nonPrintableNames: [
-        "shift", "control", "alt", "meta", "altgr"
+        "shift", "control", "alt", "meta", "altgr", "cmd"
         "backspace", "escape",
         "pageup", "pagedown", "end", "home",
         "left", "up", "right", "down",
@@ -69,7 +32,6 @@ module.exports = KeyKit =
         "f7", "f8", "f9", "f10", "f11", "f12",
         "f13", "f14", "f15", "f16", "f17", "f18",
         "f19", "f20", "f21", "f22", "f23", "f24" ]
-
 
     shiftedToUnshifted:
         "~": "`",  "!": "1",  "@": "2",  "#": "3",  "$": "4",  "%": "5",
@@ -208,6 +170,50 @@ module.exports = KeyKit =
         )
         | LT )>)
         ///gi
+
+    # Find a key
+    findByName: (name) ->
+        if @keysBySysname[name]?
+            return @keysBySysname[name]
+        for key, data of @keysBySysname
+            if data.name == name.toLowerCase()
+                return data
+        return null
+    findByCode: (code) ->
+        if @keysByCode[code]?
+            return @keysByCode[code]
+        return null
+
+    # !! code(string) and name(number)
+    # FIXME unchecked
+    code: (name) -> @findByName(name).code
+    name: (code) -> @findByCode(code).name
+
+    # Public: find data for given key
+    #
+    # * `arg` {String} name or {Integer} keycode
+    #
+    # Returns key data {object}
+    key: (key) ->
+        if typeof key is 'string'
+            return @findByName key
+        else
+            return @findByCode key
+
+    # Public: tests if `arg` is a modifier key
+    #
+    # * `arg` {String} name or {Integer} keycode
+    #
+    # Returns {Boolean}
+    isModifier: (arg) ->
+        isMod = false
+        if typeof arg is 'string'
+            isMod |= arg == 'ctrl' || arg == 'alt'
+            isMod |= arg == 'shift' || arg == 'cmd' || arg == 'meta'
+        else
+            isMod = _.contains [16, 17, 18, 224], arg
+        return isMod
+    isMod: (arg) -> @isModifier arg
 
     ###
     Section: char-helpers
