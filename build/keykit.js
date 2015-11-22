@@ -460,7 +460,7 @@
       shift: "SHIFT",
       altgr: "ALTGR"
     },
-    normalKeyStrokeRegex: /^(?:(?:(?:(?:ctrl|alt|shift|meta|cmd)-)*(.|enter|space|backspace|delete|tab|escape|pageup|pagedown|home|end|left|right|up|down|f\d{1,2}))|(control|ctrl|alt|shift|meta|cmd))$/,
+    normalKeyStrokeRegex: /^(?:(?:(?:(?:ctrl|alt|shift|meta|cmd)-)*(.|enter|space|backspace|delete|tab|escape|pageup|pagedown|home|end|left|right|up|down|insert|f\d{1,2}))|(control|ctrl|alt|shift|meta|cmd))$/,
     vimEscapedRegex: /<((?:((?:[CSAM]-)+)?(BS|TAB|CR|ESC|SPACE|PAGEUP|PAGEDOWN|END|HOME|LEFT|UP|RIGHT|DOWN|DEL|BAR|F\d{1,2}|<LT>|.))|LT)>/i,
     vimSequenceRegex: /([^<]|<((?:((?:[CSAM]-)+)?(BS|TAB|CR|ESC|SPACE|PAGEUP|PAGEDOWN|END|HOME|LEFT|UP|RIGHT|DOWN|DEL|BAR|F\d{1,2}|<LT>|.))|LT)>)/gi,
     findByName: function(name) {
