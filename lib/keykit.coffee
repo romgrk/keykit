@@ -139,7 +139,7 @@ module.exports = KeyKit =
                 (?:(?:ctrl|alt|shift|meta|cmd)-)*
                 (.|enter|space|backspace|delete|tab|escape
                 |pageup|pagedown|home|end|left|right|up
-                |down|f\d{1,2}))
+                |down|insert|f\d{1,2}))
             |(
                 control|ctrl|alt|shift|meta|cmd
             )
