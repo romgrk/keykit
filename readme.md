@@ -1,15 +1,29 @@
 
 # KeyKit module
 
-Some basic shit to handle KeyEvents, transform keyCodes into chars and stuff like that.
-Mind the formulation. This is *not* intended for production use. It is based on
-my keyboard, using US(en) and CA(fr) layouts. 
-Although, it works great for testing and development.
+  *No you havent found a solution to handle keyevents gracefully*
+   *suggested reading:* http://unixpapa.com/js/key.html
 
-It can:
- - parse a keystroke from text/kbEvent and return a model
- - retrieve keyCodes/names/properties
- - execute a sequence of keys
+Helpers to transform and parse `KeyEvents`, `keyCodes` and characters.
+The useful stuff here can: 
+ - parse a keystroke from a keyboard event;
+ - parse a keystroke from a string of text; 
+   where *string of text* means:
+    - a vi/vim-formatted key sequence: `<C-A-p>`
+    - an atom-formatted key sequence: `ctrl-alt-p`
+    - a single character. In which case there is no 
+      string of text anyway.
+ - return the corresponding _x_ for _y_
+      where    _x_, _y_ ∈ {keyCode, name, character} 
+      ex.:  `9`   =&gt; `"escape"`
+            `"%"` =&gt; `14`
+            _!_ it returns the corresponding key on my
+                keyboard; not yours. 
+ - execute a sequence of keys as-if (~) it was the user 
+   typing it; similar to a macro being replayed. 
+
+This is *not* intended for production use. It is based on my keyboard.
+Although, it works great for testing and development.
 
 **Install :** ` npm install keykit `
 
