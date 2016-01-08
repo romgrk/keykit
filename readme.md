@@ -2,23 +2,38 @@
 # KeyKit module
 
   *No you havent found a solution to handle keyevents gracefully*
-   *suggested reading:* http://unixpapa.com/js/key.html
+
+  *suggested reading:* http://unixpapa.com/js/key.html
 
 Helpers to transform and parse `KeyEvents`, `keyCodes` and characters.
 The useful stuff here can: 
+
  - parse a keystroke from a keyboard event;
+
  - parse a keystroke from a string of text; 
+
    where *string of text* means:
+
     - a vi/vim-formatted key sequence: `<C-A-p>`
+
     - an atom-formatted key sequence: `ctrl-alt-p`
+
     - a single character. In which case there is no 
+
       string of text anyway.
+
  - return the corresponding _x_ for _y_
+
       where    _x_, _y_ ∈ {keyCode, name, character} 
+
       ex.:  `9`   =&gt; `"escape"`
+
             `"%"` =&gt; `14`
+
             _!_ it returns the corresponding key on my
+
                 keyboard; not yours. 
+
  - execute a sequence of keys as-if (~) it was the user 
    typing it; similar to a macro being replayed. 
 
